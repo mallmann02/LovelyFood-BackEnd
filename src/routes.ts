@@ -7,7 +7,7 @@ const upload = multer(multerConfig);
 
 const routes = express.Router();
 
-routes.post('/products', upload.single('image'), async (request: Request, response: Response) => {
+routes.post('/products', upload.array('images'), async (request: Request, response: Response) => {
     const {
         name,
         type,
@@ -24,7 +24,7 @@ routes.post('/products', upload.single('image'), async (request: Request, respon
         description,
         cost,
         disponibility,
-        image: request.file.filename,
+        images: request.files,
         slices
     };
 
