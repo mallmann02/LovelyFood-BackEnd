@@ -4,7 +4,7 @@ export async function up(knex: Knex){
     //criar tabela
     return knex.schema.createTable('products', table => {
         table.increments('id').primary();
-        table.string('image').notNullable();
+        table.string('images').notNullable();
         table.string('name').notNullable();
         table.decimal('cost').notNullable();
         table.boolean('disponibility').notNullable();
