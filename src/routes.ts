@@ -7,10 +7,6 @@ const upload = multer(multerConfig);
 
 const routes = express.Router();
 
-interface Product{
-    images: string;
-}
-
 routes.post('/products', upload.array('image'), async (request: Request, response: Response) => {
     const {
         name,
@@ -48,7 +44,7 @@ routes.post('/products', upload.array('image'), async (request: Request, respons
 
 routes.get('/products', async (request: Request, response: Response) => {
     const { type } = request.query;
-
+    
     const products = await knex('products').where('type', String(type)).select('*');
 
     const serializedProducts = products.map(product => {        
@@ -58,7 +54,7 @@ routes.get('/products', async (request: Request, response: Response) => {
         return {
             ...product,
             splited_images: serializedImages.map((image: string) =>{
-                return `http://192.168.8.2:3333/uploads/${image}`
+                return `http://172.20.10.4:3333/uploads/${image}`
             })
         }
     });
@@ -80,7 +76,7 @@ routes.get('/products/:id', async (request: Request, response: Response) => {
     const serializedProduct = {
         ...product,
         splited_images: serializedImages.map((image: string) =>{
-            return `http://192.168.8.2:3333/uploads/${image}`
+            return `http://172.20.10.4:3333/uploads/${image}`
         })
     };
 
@@ -94,11 +90,26 @@ routes.get('/items', async (request: Request, response: Response) => {
         return {
             id: item.id,
             title: item.title,
-            image_url: `http://192.168.8.2:3333/uploads/${item.image}`,
+            image_url: `http://172.20.10.4/uploads/${item.image}`,
         };
     });
 
     return response.json(serializedItems);
 })
+
+routes.post('/sessions', async ( request: Request, response: Response) =>{
+    const { email, password } = request.body;
+
+        const coach = await knex('administrators')
+            .where('email', email)
+            .where('password', password)
+            .select('email')
+            .first();
+
+        if(!coach){
+            return response.status(400).json({error: 'No Coach found with these credentials.'})
+        }
+        return response.json(coach);
+});
 
 export default routes;
