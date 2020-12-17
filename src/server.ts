@@ -16,5 +16,6 @@ app.use(routes);
 app.use('/uploads', express.static(path.resolve(__dirname, '..', 'uploads')));
 app.use(errors());
 
-const port = process.env.PORT || 8080
-app.listen(port);
+const port = Number(process.env.PORT) || 8080;
+const host = '0.0.0.0'
+app.listen(port, host);
