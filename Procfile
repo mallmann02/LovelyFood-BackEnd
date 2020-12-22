@@ -1,1 +1,1 @@
-web:  yarn start
+web: node -r ts-node/register --optimize-for-size --max-old-space-size=460 --gc_interval=100 src/server.ts
